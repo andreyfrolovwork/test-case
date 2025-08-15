@@ -1,21 +1,29 @@
 <template>
   <div>
-    <h1>My Awesome Blog</h1>
-    <p>Welcome to our blog! Here are the latest posts:</p>
+    <h1>My Awesome Store</h1>
+    <p>Welcome to our store! Check out the latest products:</p>
 
-    <div v-if="pending">Fetching posts...</div>
-    <div v-else-if="error">Could not load posts.</div>
-    <ul v-else-if="posts">
-      <li v-for="post in posts" :key="post.id">
-        <NuxtLink :to="`/items/${post.id}`">{{ post.title }}</NuxtLink>
+    <div v-if="pending">Fetching products...</div>
+    <div v-else-if="error">Could not load products.</div>
+    <ul v-else-if="products">
+      <li v-for="product in products" :key="product.id">
+        <NuxtLink :to="`/items/${product.id}`">{{ product.title }}</NuxtLink>
+        - ${{ product.price }}
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-const { data: posts, pending, error } = await useAsyncData('posts', () => {
-  return $fetch('https://jsonplaceholder.typicode.com/posts?_limit=10');
+import _ from 'lodash';
+import type { Product } from '~/types/product';
+
+// Using the full lodash library here increases the bundle size.
+// Using _.shuffle causes a hydration mismatch because the shuffled order
+// on the server will be different from the shuffled order on the client.
+const { data: products, pending, error } = await useAsyncData('products', async () => {
+  const fetchedProducts = await $fetch<Product[]>('https://fakestoreapi.com/products?limit=10');
+  return _.shuffle(fetchedProducts);
 });
 </script>
 

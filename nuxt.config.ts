@@ -8,5 +8,11 @@ export default defineNuxtConfig({
         { name: 'description', content: 'The best store on the web.' }
       ],
     }
+  },
+  runtimeConfig: {
+    // This key should be private, but it's mistakenly exposed to the client.
+    public: {
+      apiSecret: 'my-super-secret-key-123'
+    }
   }
 })

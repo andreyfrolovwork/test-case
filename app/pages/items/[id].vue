@@ -1,16 +1,18 @@
 <template>
   <div>
+    <AnimationIndicator />
     <h1>Item Page</h1>
-    <p>This is the page for item with ID: {{ id }}</p>
-    
-    <p><em>Navigate to /items/1, /items/2 etc. to see this page.</em></p>
-
     <hr >
-
     <AvailabilityChecker />
+    <hr >
+
+    <button @click="showReviews = !showReviews">
+      {{ showReviews ? 'Hide' : 'Show' }} Reviews
+    </button>
+    <ProductReviews v-if="showReviews" />
     
     <hr >
-    
+
     <div v-if="error">
       <p>Could not load item data.</p>
     </div>
@@ -24,11 +26,18 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import type { Product } from '~/types/product';
+import ProductReviews from '~/components/ProductReviews.vue';
+import AnimationIndicator from '~/components/AnimationIndicator.vue';
+
+const showReviews = ref(false);
+
 const route = useRoute();
 const id = computed(() => route.params.id as string);
 
 
-const { data, error } = await useFetch<Record<string, unknown>>(`/api/items/${id.value}`, {
+const { data, error } = await useFetch<Product>(`/api/items/${id.value}`, {
   key: id.value,
 });
 
@@ -41,5 +50,11 @@ body {
 }
 hr {
   margin: 2rem 0;
+}
+.device-info-error {
+  border: 1px solid red;
+  padding: 1rem;
+  margin-top: 1rem;
+  background-color: #fff0f0;
 }
 </style>

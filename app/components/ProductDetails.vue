@@ -3,14 +3,18 @@
     <h3>Product Details</h3>
     <div>
       <h4>{{ itemData.title }}</h4>
-      <p>{{ itemData.body }}</p>
+      <p><strong>Price:</strong> ${{ itemData.price }}</p>
+      <p><strong>Category:</strong> {{ itemData.category }}</p>
+      <p>{{ itemData.description }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Product } from '~/types/product';
+
 defineProps<{
-  itemData: Record<string, unknown> | null;
+  itemData: Product | null;
 }>();
 </script>
 

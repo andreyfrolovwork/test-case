@@ -1,25 +1,15 @@
-// server/api/items/[id].ts
 
-// This simulates a slow API endpoint
-
+import type { Product } from '~/types/product';
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
 
-  if (!id || isNaN(Number(id))) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'ID should be a number',
-    });
-  }
-
-  // Artificial delay to simulate a slow database query or external API call
-  await new Promise((resolve) => setTimeout(resolve, 2500));
-
   try {
-    const data = await $fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+    const data = await $fetch<Product>(`https://fakestoreapi.com/products/${id}`);
     return data;
   } catch (error) {
+    console.error(error);
     throw createError({
       statusCode: 404,
       statusMessage: `Item with ID ${id} not found`,
